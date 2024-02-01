@@ -174,63 +174,69 @@
       </div>
 
   </div>
-  
-  <script>
-    let currentImageIndex = 0;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+ <script>
+  let currentImageIndex = 0;
 
-    function toggleEnlarge(productName, imageArray) {
-      const enlargedContainer = document.querySelector('.enlarged');
-      if (!enlargedContainer) {
-        showImageInEnlarge(imageArray[currentImageIndex], productName, imageArray);
+  function toggleEnlarge(productName, imageArray) {
+    const enlargedContainer = document.querySelector('.enlarged');
+    if (!enlargedContainer) {
+      showImageInEnlarge(imageArray[currentImageIndex], productName, imageArray);
+    }
+  }
+
+  function showImageInEnlarge(imageSrc, productName, imageArray) {
+    const enlargedContainer = document.createElement('div');
+    enlargedContainer.classList.add('enlarged');
+
+    const enlargedImage = document.createElement('img');
+    enlargedImage.src = imageSrc;
+    enlargedImage.alt = productName;
+
+    const leftArrow = document.createElement('div');
+    leftArrow.classList.add('arrow', 'left');
+    leftArrow.onclick = () => changeImageInEnlarge(-1, enlargedImage, imageArray);
+    leftArrow.innerHTML = '&#9665;';
+
+    const rightArrow = document.createElement('div');
+    rightArrow.classList.add('arrow', 'right');
+    rightArrow.onclick = () => changeImageInEnlarge(1, enlargedImage, imageArray);
+    rightArrow.innerHTML = '&#9655;';
+
+    enlargedContainer.appendChild(enlargedImage);
+    enlargedContainer.appendChild(leftArrow);
+    enlargedContainer.appendChild(rightArrow);
+
+    enlargedContainer.addEventListener('click', (event) => {
+      if (!event.target.classList.contains('arrow')) {
+        enlargedContainer.remove();
       }
+    });
+
+    document.body.appendChild(enlargedContainer);
+
+    leftArrow.style.display = 'block';
+    rightArrow.style.display = 'block';
+
+    // Initialize Hammer.js for swipe gestures
+    const hammertime = new Hammer(enlargedContainer);
+    hammertime.on('swipeleft', () => changeImageInEnlarge(1, enlargedImage, imageArray));
+    hammertime.on('swiperight', () => changeImageInEnlarge(-1, enlargedImage, imageArray));
+  }
+
+  function changeImageInEnlarge(direction, enlargedImage, imageArray) {
+    currentImageIndex += direction;
+
+    if (currentImageIndex < 0) {
+      currentImageIndex = imageArray.length - 1;
+    } else if (currentImageIndex >= imageArray.length) {
+      currentImageIndex = 0;
     }
 
-    function showImageInEnlarge(imageSrc, productName, imageArray) {
-      const enlargedContainer = document.createElement('div');
-      enlargedContainer.classList.add('enlarged');
+    enlargedImage.src = imageArray[currentImageIndex];
+  }
+</script>
 
-      const enlargedImage = document.createElement('img');
-      enlargedImage.src = imageSrc;
-      enlargedImage.alt = productName;
-
-      const leftArrow = document.createElement('div');
-      leftArrow.classList.add('arrow', 'left');
-      leftArrow.onclick = () => changeImageInEnlarge(-1, enlargedImage, imageArray);
-      leftArrow.innerHTML = '&#9665;';
-
-      const rightArrow = document.createElement('div');
-      rightArrow.classList.add('arrow', 'right');
-      rightArrow.onclick = () => changeImageInEnlarge(1, enlargedImage, imageArray);
-      rightArrow.innerHTML = '&#9655;';
-
-      enlargedContainer.appendChild(enlargedImage);
-      enlargedContainer.appendChild(leftArrow);
-      enlargedContainer.appendChild(rightArrow);
-
-      enlargedContainer.addEventListener('click', (event) => {
-        if (!event.target.classList.contains('arrow')) {
-          enlargedContainer.remove();
-        }
-      });
-
-      document.body.appendChild(enlargedContainer);
-
-      leftArrow.style.display = 'block';
-      rightArrow.style.display = 'block';
-    }
-
-    function changeImageInEnlarge(direction, enlargedImage, imageArray) {
-      currentImageIndex += direction;
-
-      if (currentImageIndex < 0) {
-        currentImageIndex = imageArray.length - 1;
-      } else if (currentImageIndex >= imageArray.length) {
-        currentImageIndex = 0;
-      }
-
-      enlargedImage.src = imageArray[currentImageIndex];
-    }
-  </script>
 
 
 </body>
