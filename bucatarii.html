@@ -103,6 +103,16 @@
       transition: all .375s;
     }
 
+@media only screen and (max-width: 450px) {
+        .container { 
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Added to allow the cards to wrap to the next line */
+      gap: 20px; /* Added to create space between cards */
+      margin-top: 150px;
+    }
+    }
+    
   </style>
 
 <button id="burger" class="open-main-nav">
